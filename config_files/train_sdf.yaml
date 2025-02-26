@@ -29,3 +29,5 @@ pretrained: False   # Use pretrain weights
 pretrain_weights: ''   # Path to pretrain weights
 pretrain_optim_model: ''   # Path to pretrain weights (model)
 pretrain_optim_latent: ''   # Path to pretrain weights (latent codes)
+on_different_dataset: False   # Use pretrain weights on different dataset
+inference: False   # Inference mode

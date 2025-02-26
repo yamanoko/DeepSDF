@@ -65,15 +65,21 @@ class Trainer():
             # load pretrained optimisers
             self.optimizer_model.load_state_dict(torch.load(self.train_cfg['pretrain_optim_model'], map_location=device))
 
-            # retrieve latent codes from results.npy file
-            results_path = self.train_cfg['pretrain_optim_model'].split(os.sep)
-            results_path[-1] = 'results.npy'
-            results_path = os.sep.join(results_path)
             # load latent codes from results.npy file
-            results_latent_codes = np.load(results_path, allow_pickle=True).item()
-            self.latent_codes = torch.tensor(results_latent_codes['best_latent_codes']).float().to(device)
-            self.optimizer_latent = optim.Adam([self.latent_codes], lr=self.train_cfg['lr_latent'], weight_decay=0)
-            self.optimizer_latent.load_state_dict(torch.load(self.train_cfg['pretrain_optim_latent'], map_location=device))
+            if self.train_cfg["on_different_dataset"] is False:
+                # retrieve latent codes from results.npy file
+                results_path = self.train_cfg['pretrain_optim_model'].split(os.sep)
+                results_path[-1] = 'results.npy'
+                results_path = os.sep.join(results_path)
+                results_latent_codes = np.load(results_path, allow_pickle=True).item()
+                self.latent_codes = torch.tensor(results_latent_codes['best_latent_codes']).float().to(device)
+                self.optimizer_latent = optim.Adam([self.latent_codes], lr=self.train_cfg['lr_latent'], weight_decay=0)
+                self.optimizer_latent.load_state_dict(torch.load(self.train_cfg['pretrain_optim_latent'], map_location=device))
+            
+            # inferencing on a different dataset
+            if self.train_cfg["inference"]:
+                for param in self.model.parameters():
+                    param.requires_grad = False
 
         if self.train_cfg['lr_scheduler']:
             self.scheduler_model =  torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer_model, mode='min', factor=self.train_cfg['lr_multiplier'], patience=self.train_cfg['patience'], threshold=0.0001, threshold_mode='rel')

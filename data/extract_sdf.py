@@ -4,6 +4,7 @@ import os
 from utils import utils_mesh
 import point_cloud_utils as pcu
 import data.ShapeNetCoreV2 as ShapeNetCoreV2
+import data as data
 from glob import glob
 from datetime import datetime
 import config_files
@@ -30,10 +31,10 @@ def combine_sample_latent(samples, latent_class):
 def main(cfg):
   
     # Full paths to all .obj
-    obj_paths = glob(os.path.join(os.path.dirname(ShapeNetCoreV2.__file__), '*', '*', 'models', '*.obj'))
+    obj_paths = glob(os.path.join(os.path.dirname(data.__file__), cfg["dataset"],  '*', '*', 'models', '*.obj'))
 
     # File to store the samples and SDFs
-    samples_dict = dict()        
+    samples_dict = dict()
 
     # Store conversion between object index (int) and its folder name (str)
     idx_str2int_dict = dict()
@@ -92,8 +93,8 @@ def main(cfg):
 
     np.save(os.path.join(os.path.dirname(results.__file__), f'samples_dict_{cfg["dataset"]}.npy'), samples_dict)
 
-    np.save(os.path.join(os.path.dirname(results.__file__), f'idx_str2int_dict.npy'), idx_str2int_dict)
-    np.save(os.path.join(os.path.dirname(results.__file__), f'idx_int2str_dict.npy'), idx_int2str_dict)
+    np.save(os.path.join(os.path.dirname(results.__file__), cfg["dataset"], f'idx_str2int_dict.npy'), idx_str2int_dict)
+    np.save(os.path.join(os.path.dirname(results.__file__), cfg["dataset"], f'idx_int2str_dict.npy'), idx_int2str_dict)
 
 
 if __name__=='__main__':

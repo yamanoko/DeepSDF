@@ -15,7 +15,7 @@ class SDFDataset(Dataset):
         self.data = dict()
         for obj_idx in list(samples_dict.keys()):  # samples_dict.keys() for all the objects
             for key in samples_dict[obj_idx].keys():   # keys are ['samples', 'sdf', 'latent_class', 'samples_latent_class']
-                value = torch.from_numpy(samples_dict[obj_idx][key]).float().to(device)
+                value = torch.from_numpy(samples_dict[obj_idx][key]).float()
                 if len(value.shape) == 1:    # increase dim if monodimensional, needed to vstack
                     value = value.view(-1, 1)
                 if key not in list(self.data.keys()):
@@ -30,7 +30,7 @@ class SDFDataset(Dataset):
     def __getitem__(self, idx):
         latent_class = self.data['samples_latent_class'][idx, :]
         sdf = self.data['sdf'][idx]
-        return latent_class, sdf
+        return latent_class.to(device), sdf.to(device)
 
 if __name__=='__main__':
     dataset_name = "ShapeNetCore"

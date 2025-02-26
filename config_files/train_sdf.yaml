@@ -1,13 +1,13 @@
 # Config file for training SDF model
 
-dataset: 'ShapeNetCore'   # Dataset used
+dataset: 'synthetic_dataset'   # Dataset used
 seed: 42   # Seed for reproducibility
 
 # training
 epochs: 300
 lr_model: 0.00001   # Initial learning rate (model)
 lr_latent: 0.001    # Initial learning rate (latent vector)
-batch_size: 16
+batch_size: 4
 sigma_regulariser: 0.01   # Sigma value as regulariser in the loss function
 loss_multiplier: 1   # Loss multiplier
 clamp: true  # Clip the network prediction
